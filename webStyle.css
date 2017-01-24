@@ -1,0 +1,106 @@
+﻿	ul.menu {
+		margin:0 auto;
+		display: table;
+	}
+	ul, li, a{
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		text-decoration: none;
+	}
+	
+	ul.menu li{
+		float: left;
+		position: relative;
+	}
+	
+	ul.menu li a{
+		display: block;
+		padding: 12px 20px;
+		background: #C2E0FF;
+		color: #000;
+	}
+	
+	ul.menu ul{
+		display: none;	
+		position: absolute;	
+		left: 0;    
+		margin: 0;
+	}
+	
+	ul.menu li a:hover {
+		background: #E6FFFF;
+	}
+	
+	ul.menu ul a:hover {
+		background: #EEFFFF;
+	}
+	
+	ul.menu li:hover > ul{
+		display: block;
+	}
+	
+	ul.menu ul li {
+		border-bottom: 1px solid #DDD;
+	}
+	
+	ul.menu ul li:last-child {
+		border-bottom: none;
+	}
+	
+	ul.menu ul a {
+		width: 90px;
+		padding: 10px 12px;    
+		color: #666;        
+		background: #DAECFF;
+	}
+	div.zone2 {
+		background: #F0F0FF;
+	}
+	div.page_zone {
+		margin: 0 auto;
+		display: table;		
+	}
+	
+	table.gameItem {
+		height: 410px;     
+		width: 240px;          
+		float: left;
+		margin: 10px auto;
+		background: #E0E0D1;
+	}
+
+	table.blankSpace {
+		margin: 10px auto;
+		float: left;
+	}
+	
+	div.page {
+		margin: 0 auto;
+		display: table;
+	}
+	
+	button.lastPage {
+		background-image: url('pagedown.gif');
+		height: 32px;
+		width: 32px;      
+	}
+	
+	button.nextPage {
+		background-image: url('pageup.gif');
+		height: 32px;
+		width: 32px;      
+	}
+	
+	div.block {
+		text-align: right;
+	}
+
+	div.block2-2 {
+		float: right;
+	}
+	
+	button.gameButton:hover {
+		cursor: pointer;
+	}
+	
