@@ -91,6 +91,11 @@ $game = queryDb($sqlCmd, $dbConn);
 
 <?php
 showMenu();
+
+$sqlCmd = "SELECT type from $itemTable WHERE type != '' AND type IS NOT null GROUP BY type";
+$gType = queryDb($sqlCmd, $dbConn);
+$sqlCmd = "SELECT platform from $itemTable WHERE platform != '' AND platform IS NOT null GROUP BY platform";
+$gPlat = queryDb($sqlCmd, $dbConn);
 ?>
 
 <div class="block">
@@ -103,21 +108,22 @@ showMenu();
 	類型: 
 	<select name="selType" onchange="submit();">
 		<option value="全部"
-		<?php if( isset($_POST['selType']) && $_POST['selType'] == "全部") echo "selected"?>>全部</option>
-		<option value="動作"
-		<?php if( isset($_POST['selType']) && $_POST['selType'] == "動作") echo "selected"?>>動作</option>
-		<option value="冒險"
-		<?php if( isset($_POST['selType']) && $_POST['selType'] == "冒險") echo "selected"?>>冒險</option>
-		<option value="角色扮演"
-		<?php if( isset($_POST['selType']) && $_POST['selType'] == "角色扮演") echo "selected"?>>角色扮演</option>
-		<option value="射擊"
-		<?php if( isset($_POST['selType']) && $_POST['selType'] == "射擊") echo "selected"?>>射擊</option>
-		<option value="競速"
-		<?php if( isset($_POST['selType']) && $_POST['selType'] == "競速") echo "selected"?>>競速</option>
-		<option value="益智解謎"
-		<?php if( isset($_POST['selType']) && $_POST['selType'] == "益智解謎") echo "selected"?>>益智解謎</option>
-		<option value="策略模擬"
-		<?php if( isset($_POST['selType']) && $_POST['selType'] == "策略模擬") echo "selected"?>>策略模擬</option>
+		<?php 
+		if( isset($_POST['selType']) && $_POST['selType'] == "全部")
+			echo " selected";
+		
+		echo ">全部</option>";
+		
+		foreach($gType as $theType) {
+			$t = $theType['type'];
+			echo "<option value=\"$t\" ";
+			
+			if( isset($_POST['selType']) && $_POST['selType'] == $t)
+				echo "selected";
+			
+			echo ">$t</option>";
+		}
+		?>
 	</select>
 	
 	<div class="block2-2">
@@ -125,7 +131,6 @@ showMenu();
 	<button class="searchActive" onclick="submit();" >搜尋</button>
 	</div>
 </form>
-
 
 <?php
 if(count($game) != 0)
@@ -165,23 +170,21 @@ else
 	<p id="titleInfo" style="color:red;"></p>
 	平台:
 	<select id="addPlat" name="platAdded" >
-		<option value="PC">PC</option>
-		<option value="PC online">PC online</option>
-		<option value="PS4">PS4</option>
-		<option value="Xbox One">Xbox One</option>
-		<option value="Wii U">Wii U</option>
-		<option value="PSV">PSV</option>
-		<option value="3DS">3DS</option>
+		<?php
+		foreach($gPlat as $thePlat) {
+			$p = $thePlat['platform'];
+			echo "<option value=\"$p\">$p</option>";
+		}
+		?>
 	</select><br/><br/>
 	類型:
 	<select id="addType" name="typeAdded" >
-		<option value="動作">動作</option>
-		<option value="冒險">冒險</option>
-		<option value="角色扮演">角色扮演</option>
-		<option value="射擊">射擊</option>
-		<option value="競速">競速</option>
-		<option value="益智解謎">益智解謎</option>
-		<option value="策略模擬">策略模擬</option>
+		<?php
+		foreach($gType as $theType) {
+			$t = $theType['type'];
+			echo "<option value=\"$t\">$t</option>";
+		}
+		?>
 	</select><br/><br/>
 	發售日期:
 	<input type="date" id="addDate" name="dateAdded" min= "1970-01-01" max="2030-12-31">
