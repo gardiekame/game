@@ -3,7 +3,8 @@ $host = "localhost";
 $user = "develop";
 $pwd = "1234";
 $dbName = "mgList";
-$itemTable = "game";
 $itemPerPage = 10;
 $itemPerLine = 5;
+$itemTable = "game";
+$typeTable = "game_type";
 ?>

@@ -26,7 +26,7 @@ if(isset($_POST['searchTitle']) && $_POST['searchTitle'] != "")
 	$i = 1;
 	foreach( $game as $item) {
 		$title = $item['title'];
-		$type = $item['type'];
+		$type = $item['type_name'];
 		$platform = $item['platform'];
 		$releaseDate = $item['release_date'];
 		
@@ -47,7 +47,7 @@ if(isset($_POST['searchTitle']) && $_POST['searchTitle'] != "")
 	<table class=\"gameItem\">
 		<tr>
 			<td>
-				<button class=\"gameButton\" id=\"$i\" style=\"background-image: url('$imgUrl');border: 0; height: 280; width: 220; background-size: 100%; \"></button>
+				<button class=\"gameButton\" id=\"$i\" style=\"background-image: url('$imgUrl');border: 0; height: 300; width: 220; background-size: 100%\"></button>
 			</td>
 		</tr>
 		<tr>

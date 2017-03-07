@@ -1,121 +1,42 @@
 ﻿<?php
+
+require_once("include/header.php");
 require_once("include/configure.php");
 require_once("include/dbFunction.php");
 require_once("include/uploadCoverImage.php");
 require_once("include/view.php");
-require_once("include/header.php");
+require_once("include/control.php");
 
-$dbConn = connectDb($host, $user, $pwd, $dbName);
-##----------------------------------------------------------------
-$mainSql = "SELECT * FROM $itemTable ";
-$getCountsSql = "SELECT count(*) FROM $itemTable ";
-
-if(isset($_POST['searchTitle']) && $_POST['searchTitle'] !="")
-	$searchTitle = htmlspecialchars($_POST['searchTitle']);
-
-if(isset($_POST['selType']) && $_POST['selType'] != "全部") {
-	$selType = $_POST['selType'];
-	
-	if(isset($searchTitle)) {
-		$sqlcmd = $getCountsSql . "WHERE type = '$selType' AND title like '%$searchTitle%'";//AND valid='Y'
-		$gameCounts = counts($sqlcmd, $dbConn);
-		$sqlcmd = $mainSql . "WHERE type = '$selType' AND title like '%$searchTitle%' ORDER BY release_date DESC"; 
-	}
-	else{
-		$sqlcmd = $getCountsSql . "WHERE type = '$selType'";
-	    $gameCounts = counts($sqlcmd, $dbConn);
-		$sqlcmd = $mainSql . "WHERE type = '$selType' ORDER BY release_date DESC";
-	}
-	
-}
-else{
-	
-	if(isset($searchTitle)) {
-		$sqlcmd = $getCountsSql . "WHERE title like '%$searchTitle%'";
-		$gameCounts = counts($sqlcmd, $dbConn);
-		$sqlcmd = $mainSql . "WHERE title like '%$searchTitle%' ORDER BY release_date DESC";
-	}
-	else {
-		$gameCounts = counts($getCountsSql, $dbConn);
-		$sqlcmd = $mainSql . "ORDER BY release_date DESC";
-	}
-	
-}
-
-$totalPage = (int)ceil($gameCounts/$itemPerPage);
-
-if(!isset($_GET['page']) || $_GET['page'] < 1 || $_GET['page'] > $totalPage)
-	$page = 1;
-else
-	$page = $_GET['page'];
-if(isset($_GET['lastPage']) && $_GET['page'] > 1 && $_GET['page'] <= $totalPage) 
-	$page--;
-if(isset($_GET['nextPage']) && $_GET['page'] > 0 && $_GET['page'] < $totalPage) 
-	$page++;
-
-$start = ($page - 1)*$itemPerPage;
-$sqlCmd = $sqlcmd ." LIMIT $start, $itemPerPage";
-##---------------------------------------------------------------
-if(isset($_POST['titleAdded']) && $_POST['titleAdded'] != "") {
-	
-	if($_POST['theOperation'] == "addItem")
-		$imageAdded = counts("SELECT MAX(g_id) FROM $itemTable", $dbConn) + 1;
-	else if($_POST['theOperation'] == "editItem") {
-		$itemId = (int)$_POST["itemId"];
-		$imageAdded = (string)($itemId);
-	}
-		
-	if($_FILES["fileToUpload"]["name"] != "")
-		uploadCover($_POST['theOperation']);
-	
-	if(isset($_POST['hasDate']) && $_POST['hasDate'] == "none")
-		$dateAdded = null;
-	else
-		$dateAdded = $_POST['dateAdded'];
-	
-	if($_POST['theOperation'] == "addItem")
-		addGameItem($_POST['titleAdded'], $_POST['typeAdded'], $_POST['platAdded'], 
-			$dateAdded, $imageAdded, $dbConn, $itemTable);
-	else if($_POST['theOperation'] == "editItem" && $_FILES["fileToUpload"]["name"] != "")
-		updateGameItem((string)$itemId, $_POST['titleAdded'], $_POST['typeAdded'], 
-			$_POST['platAdded'], $dateAdded, $imageAdded, $dbConn, $itemTable);
-	else if($_POST['theOperation'] == "editItem" && $_FILES["fileToUpload"]["name"] == "")
-		updateGameItem2((string)$itemId, $_POST['titleAdded'], $_POST['typeAdded'], 
-			$_POST['platAdded'], $dateAdded, $dbConn, $itemTable);
-}
-
-$game = queryDb($sqlCmd, $dbConn);
 ?>
 
 <body>
 
 <?php
+
 showMenu();
 
-$sqlCmd = "SELECT type from $itemTable WHERE type != '' AND type IS NOT null GROUP BY type";
-$gType = queryDb($sqlCmd, $dbConn);
-$sqlCmd = "SELECT platform from $itemTable WHERE platform != '' AND platform IS NOT null GROUP BY platform";
-$gPlat = queryDb($sqlCmd, $dbConn);
 ?>
 
+<!-- button for adding new items to DB -->
 <div class="block">
-<form class="operation" method="POST" action="">
 	<input class="add" type="button" value="新增">
-</form>
-</div>
+</div><br/>
+<!---->
 
 <form class="type" method="POST" action="">
+	<!-- drop down menu for viewing items by types -->
 	類型: 
 	<select name="selType" onchange="submit();">
 		<option value="全部"
-		<?php 
+		<?php
+		
 		if( isset($_POST['selType']) && $_POST['selType'] == "全部")
 			echo " selected";
 		
 		echo ">全部</option>";
 		
 		foreach($gType as $theType) {
-			$t = $theType['type'];
+			$t = $theType['type_name'];
 			echo "<option value=\"$t\" ";
 			
 			if( isset($_POST['selType']) && $_POST['selType'] == $t)
@@ -123,8 +44,10 @@ $gPlat = queryDb($sqlCmd, $dbConn);
 			
 			echo ">$t</option>";
 		}
+		
 		?>
 	</select>
+	<!---->
 	
 	<div class="block2-2">
 	<input type="text" name="searchTitle"  size="10">
@@ -133,15 +56,18 @@ $gPlat = queryDb($sqlCmd, $dbConn);
 </form>
 
 <?php
+
 if(count($game) != 0)
 	showItem($game);
 else
 	echo '<div style="text-align: center;">查無項目</div>';
+
 ?>
 
 <div class="page">
 <form name="selPage" method="GET" action="">
 	<?php
+	
 	if($page > 1)
 		echo "<button class=\"lastPage\" type=\"submit\" name=\"lastPage\" ></button>";
 
@@ -159,6 +85,7 @@ else
 	
 	if($page < $totalPage) 
 		echo "<button class=\"nextPage\" type=\"submit\" name=\"nextPage\" ></button>";
+	
 	?>
 </form>
 </div>
@@ -171,19 +98,23 @@ else
 	平台:
 	<select id="addPlat" name="platAdded" >
 		<?php
+		
 		foreach($gPlat as $thePlat) {
 			$p = $thePlat['platform'];
 			echo "<option value=\"$p\">$p</option>";
 		}
+		
 		?>
 	</select><br/><br/>
 	類型:
 	<select id="addType" name="typeAdded" >
 		<?php
+		
 		foreach($gType as $theType) {
-			$t = $theType['type'];
+			$t = $theType['type_name'];
 			echo "<option value=\"$t\">$t</option>";
 		}
+		
 		?>
 	</select><br/><br/>
 	發售日期:
