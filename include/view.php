@@ -4,8 +4,10 @@ function showMenu() {
 	<ul class="menu">
 		<li><a href="index.php">遊戲作品</a>
 			<ul>
-			<li><a href="xboxone.php">Xbox One</a></li>
-			<li><a href="ps4.php">PS4</a></li>
+			<li><a href="#">家機</a></li>
+			<li><a href="#">掌機</a></li>
+			<li><a href="#">電腦</a></li>
+			<li><a href="#">手遊</a></li>
 			</ul>
 		</li>
 		<li><a href="#">我的清單</a></li>

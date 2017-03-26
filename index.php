@@ -138,7 +138,7 @@ $("#operationDialog").dialog({
 
 $("div.contentDialog").each(function() {
 	$(this).dialog({
-			autoOpen: false,
+		autoOpen: false
 	});
 });
 
