@@ -23,31 +23,62 @@ showMenu();
 </div><br/>
 <!---->
 
-<form class="type" method="POST" action="">
+<form class="selectTypePlat" method="POST" action="">
 	<!-- drop down menu for viewing items by types -->
 	類型: 
-	<select name="selType" onchange="submit();">
+	<select name="selType">
 		<option value="全部"
+		
 		<?php
 		
 		if( isset($_POST['selType']) && $_POST['selType'] == "全部")
 			echo " selected";
 		
-		echo ">全部</option>";
+		echo ">全類型</option>";
 		
 		foreach($gType as $theType) {
-			$t = $theType['type_name'];
-			echo "<option value=\"$t\" ";
+			$typeName = $theType['type_name'];
+			echo "<option value=\"$typeName\" ";
 			
-			if( isset($_POST['selType']) && $_POST['selType'] == $t)
+			if( isset($_POST['selType']) && $_POST['selType'] == $typeName)
 				echo "selected";
 			
-			echo ">$t</option>";
+			echo ">$typeName</option>";
 		}
 		
 		?>
+		
 	</select>
-	<!---->
+	<!-- -->
+	
+	<!-- drop down menu for viewing items by platform -->
+	平台:
+	<select name="selPlat">
+		<option value="全部"
+		
+		<?php
+		
+		if(isset($_POST['selPlat']) && $_POST['selPlat'] == "全部")
+			echo " selected";
+		
+		echo ">全平台</option>";
+		
+		foreach($gPlat as $thePlat) {
+			$platformName = $thePlat['name'];
+			echo "<option value=\"$platformName\" ";
+			
+			if(isset($_POST['selPlat']) && $_POST['selPlat'] == $platformName)
+				echo "selected ";
+			
+			echo ">$platformName</option>";
+		}
+			
+		?>
+		
+	</select>
+	<!-- -->
+	
+	<input type="submit" value="查看">
 	
 	<div class="block2-2">
 	<input type="text" name="searchTitle"  size="10">
@@ -111,8 +142,8 @@ else
 		<?php
 		
 		foreach($gType as $theType) {
-			$t = $theType['type_name'];
-			echo "<option value=\"$t\">$t</option>";
+			$typeName = $theType['type_name'];
+			echo "<option value=\"$typeName\">$typeName</option>";
 		}
 		
 		?>

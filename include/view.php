@@ -7,7 +7,7 @@ function showMenu() {
 			<li><a href="#">家機</a></li>
 			<li><a href="#">掌機</a></li>
 			<li><a href="#">電腦</a></li>
-			<li><a href="#">手遊</a></li>
+			<li><a href="#">手機</a></li>
 			</ul>
 		</li>
 		<li><a href="#">我的清單</a></li>
@@ -29,7 +29,7 @@ if(isset($_POST['searchTitle']) && $_POST['searchTitle'] != "")
 	foreach( $game as $item) {
 		$title = $item['title'];
 		$type = $item['type_name'];
-		$platform = $item['platform'];
+		$platform = $item['platName'];
 		$releaseDate = $item['release_date'];
 		
 		if($releaseDate == "0000-00-00")

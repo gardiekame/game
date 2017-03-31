@@ -7,4 +7,5 @@ $itemPerPage = 10;
 $itemPerLine = 5;
 $itemTable = "game";
 $typeTable = "game_type";
+$platformTable = "game_platform";
 ?>
