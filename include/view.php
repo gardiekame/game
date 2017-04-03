@@ -1,4 +1,5 @@
 ﻿<?php
+
 function showMenu() {
 	print <<<_HTML_
 	<ul class="menu">
@@ -82,11 +83,12 @@ if(isset($_POST['searchTitle']) && $_POST['searchTitle'] != "")
 			<td></td><td></td><td></td>
 		</tr>
 	</table>
-	<div class=\"contentDialog\" id=\"c$i\" title=\"$title\">
+	<div class=\"contentDialog\" id=\"c$i\" title=\"$title\" style=\"display: none;\">
 	<p>$content</p></div>";
 
 	if($i % $GLOBALS["itemPerLine"] == 0)
 		echo "<br/>";
+	
 	$i++;
 	}
 	echo
@@ -94,4 +96,5 @@ if(isset($_POST['searchTitle']) && $_POST['searchTitle'] != "")
 	</div><br />";
 
 }
+
 ?>

@@ -114,18 +114,14 @@ if(isset($_POST['titleAdded']) && $_POST['titleAdded'] != "") {
 	else
 		$dateAdded = $_POST['dateAdded'];
 	
-	$sql = "SELECT type_id from $typeTable WHERE type_name = '" . $_POST['typeAdded'] . "'";
-	$typeAdded = queryDb($sql, $dbConn);
-	$typeAdded = $typeAdded[0]['type_id'];
-	
 	if($_POST['theOperation'] == "addItem")
-		addGameItem($_POST['titleAdded'], $typeAdded, $_POST['platAdded'], 
+		addGameItem($_POST['titleAdded'], $_POST['typeAdded'], $_POST['platAdded'], 
 			$dateAdded, $imageAdded, $dbConn, $itemTable);
 	else if($_POST['theOperation'] == "editItem" && $_FILES["fileToUpload"]["name"] != "")
-		updateGameItem((string)$itemId, $_POST['titleAdded'], $typeAdded, 
+		updateGameItem((string)$itemId, $_POST['titleAdded'], $_POST['typeAdded'], 
 			$_POST['platAdded'], $dateAdded, $imageAdded, $dbConn, $itemTable);
 	else if($_POST['theOperation'] == "editItem" && $_FILES["fileToUpload"]["name"] == "")
-		updateGameItem2((string)$itemId, $_POST['titleAdded'], $typeAdded, 
+		updateGameItem2((string)$itemId, $_POST['titleAdded'], $_POST['typeAdded'], 
 			$_POST['platAdded'], $dateAdded, $dbConn, $itemTable);
 }
 ##---------------------------------------------------------------

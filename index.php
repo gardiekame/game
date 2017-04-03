@@ -131,8 +131,9 @@ else
 		<?php
 		
 		foreach($gPlat as $thePlat) {
-			$p = $thePlat['platform'];
-			echo "<option value=\"$p\">$p</option>";
+			$platformID = $thePlat['platform_id'];
+			$platformName = $thePlat['name'];
+			echo "<option value=\"$platformID\">$platformName</option>";
 		}
 		
 		?>
@@ -142,8 +143,9 @@ else
 		<?php
 		
 		foreach($gType as $theType) {
+			$typeID = $theType['type_id'];
 			$typeName = $theType['type_name'];
-			echo "<option value=\"$typeName\">$typeName</option>";
+			echo "<option value=\"$typeID\">$typeName</option>";
 		}
 		
 		?>
@@ -181,8 +183,8 @@ $(document).ready(function() {
 		
 		document.getElementById("theOperation").value = "addItem";
 		document.getElementById("addTitle").value = "";
-		document.getElementById("addPlat").value = "PC";
-		document.getElementById("addType").value = "動作";
+		document.getElementById("addPlat").value = "4";
+		document.getElementById("addType").value = "1";
 		document.getElementById("addDate").value = "";
 		
 		$("#operationDialog").dialog("open");
@@ -197,8 +199,28 @@ $(document).ready(function() {
 		var itemNo = event.target.id.slice(1);
 		document.getElementById("itemId").value = document.getElementById("gID"+itemNo).innerHTML;
 		document.getElementById("addTitle").value = document.getElementById("title"+itemNo).innerHTML;
-		document.getElementById("addPlat").value = document.getElementById("plat"+itemNo).innerHTML.slice(4);
-		document.getElementById("addType").value = document.getElementById("type"+itemNo).innerHTML.slice(4);
+		
+		var theValue;
+		var select = document.getElementById("addPlat");
+		var item = document.getElementById("plat"+itemNo).innerHTML.slice(4);
+		
+		for(var i=0; i<select.length; i++) {
+			if(item == select.options[i].text)
+				theValue = select.options[i].value;
+		}
+		
+		select.value = theValue;
+		
+		select = document.getElementById("addType");
+		item = document.getElementById("type"+itemNo).innerHTML.slice(4);
+		
+		for(var i=0; i<select.length; i++) {
+			if(item == select.options[i].text)
+				theValue = select.options[i].value;
+		}
+		
+		select.value = theValue;
+		
 		document.getElementById("addDate").value = document.getElementById("date"+itemNo).innerHTML.slice(6);
 		
 		$("#operationDialog").dialog("open");
