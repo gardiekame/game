@@ -118,7 +118,10 @@ else
 	if($page < $totalPage) 
 		echo "<button class=\"nextPage\" type=\"submit\" name=\"nextPage\" ></button>";
 	
+	if(isset($platTypeChosed))
+		echo "<input name=\"plat\" type=\"text\" value=\"$platTypeChosed\" style=\"display: none;\">";
 	?>
+	
 </form>
 </div>
 
@@ -184,8 +187,8 @@ $(document).ready(function() {
 		
 		document.getElementById("theOperation").value = "addItem";
 		document.getElementById("addTitle").value = "";
-		document.getElementById("addPlat").value = document.getElementById("addPlat").options[0].value;
-		document.getElementById("addType").value = document.getElementById("addType").options[0].value;
+		document.getElementById("addPlat").value = "4";
+		document.getElementById("addType").value = "1";
 		document.getElementById("addDate").value = "";
 		
 		$("#operationDialog").dialog("open");
@@ -197,7 +200,6 @@ $(document).ready(function() {
 		});
 		
 		document.getElementById("theOperation").value = "editItem";
-		
 		var itemNo = event.target.id.slice(1);
 		document.getElementById("itemId").value = document.getElementById("gID"+itemNo).innerHTML;
 		document.getElementById("addTitle").value = document.getElementById("title"+itemNo).innerHTML;

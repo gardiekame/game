@@ -8,4 +8,5 @@ $itemPerLine = 5;
 $itemTable = "game";
 $typeTable = "game_type";
 $platformTable = "game_platform";
+$platformTable2 = "platform_type";
 ?>

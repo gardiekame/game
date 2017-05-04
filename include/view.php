@@ -1,26 +1,27 @@
 ﻿<?php
 
-function showMenu() {
-	print <<<_HTML_
-	<ul class="menu">
-		<li><a href="index.php">遊戲作品</a>
-			<ul>
-			<li><a href="#">家機</a></li>
-			<li><a href="#">掌機</a></li>
-			<li><a href="#">電腦</a></li>
-			<li><a href="#">手機</a></li>
-			</ul>
-		</li>
-		<li><a href="#">我的清單</a></li>
-		<li><a href="#">分享清單</a></li>
-	</ul><br />
-_HTML_;
+function showMenu($platType) {
+	echo 
+		'<ul class="menu">
+			<li><a href="index.php">遊戲作品</a>
+				<ul>';
+	
+	foreach($platType as $theType)
+	{
+		echo		"<li><a href=\"". $theType['page']. "\">". $theType['name']. "</a></li>";
+	}
+			
+	echo	
+				'</ul>
+			</li>
+			<li><a href="#">我的清單</a></li>
+			<li><a href="#">分享清單</a></li>
+		</ul><br />';
 }
 
 function showItem($game) {
-	echo
-	'<div class="zone2"><br />
-	<div class="page_zone">';
+	echo '<div class="zone2"><br />';
+	echo '<div class="page_zone">';
 	
 /*
 if(isset($_POST['searchTitle']) && $_POST['searchTitle'] != "")

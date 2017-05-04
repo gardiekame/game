@@ -1,46 +1,5 @@
 ﻿<?php
 
-function getSqlCmd($query, $pass, $tables)
-{
-	$select1 = "SELECT g_id, title, game_type.type_name, 
-		game_platform.name AS platName, release_date, img_url, content FROM $tables[0] ";
-	$joinSql1 = "JOIN $tables[1] ON game.type = game_type.type_id ";
-	$joinSql2 = "JOIN $tables[2] ON game.platform = game_platform.platform_id ";
-	$mainSql = $select1 . $joinSql1 . $joinSql2;
-	$getCountsSql = "SELECT count(*) FROM $tables[0] " . $joinSql1 . $joinSql2;
-	$orderSql = "ORDER BY release_date DESC ";
-
-	switch($query) {
-		case "usual":
-			$sql1 = $getCountsSql;
-			$sql2 = $mainSql . $orderSql;
-			break;
-		case "searchType&Plat":
-			$condition = "WHERE type_name = '" . $pass['selType'] . "' AND game_platform.name = '"
-				. $pass['selPlat'] . "' ";//AND valid='Y'
-			$sql1 = $getCountsSql . $condition;
-			$sql2 = $mainSql . $condition . $orderSql;
-			break;
-		case "searchType":
-			$condition = "WHERE type_name = '" . $pass['selType'] . "' ";
-			$sql1 = $getCountsSql . $condition;
-			$sql2 = $mainSql . $condition . $orderSql;
-			break;
-		case "searchPlat":
-			$condition = "WHERE game_platform.name = '" . $pass['selPlat'] . "' ";
-			$sql1 = $getCountsSql . $condition;
-			$sql2 = $mainSql . $condition . $orderSql;
-			break;
-		case "searchTitle":
-			$condition = "WHERE title like '%" . $pass['searchTitle'] . "%' ";
-			$sql1 = $getCountsSql . $condition;
-			$sql2 = $mainSql . $condition . $orderSql;
-			break;
-	}
-
-	return array($sql1, $sql2);
-}
-
 $dbConn = connectDb($host, $user, $pwd, $dbName);
 
 if(isset($_POST['searchTitle']) && $_POST['searchTitle'] !="") {
@@ -48,37 +7,31 @@ if(isset($_POST['searchTitle']) && $_POST['searchTitle'] !="") {
 	$toPass['searchTitle'] = $searchTitle;
 }
 
-if(isset($_POST['selType']))
-	$selType = $_POST['selType'];
-else
-	$selType = "全部";
-if(isset($_POST['selPlat']))
-	$selPlat = $_POST['selPlat'];
-else
-	$selPlat = "全部";
+isset($_POST['selType']) ? $selType = $_POST['selType'] : $selType = "全部";
+isset($_POST['selPlat']) ? $selPlat = $_POST['selPlat'] : $selPlat = "全部";
 
-$tables = array($itemTable, $typeTable, $platformTable);
+$tables = array($itemTable, $typeTable, $platformTable, $platformTable2);
 $toPass['selType'] = $selType;
 $toPass['selPlat'] = $selPlat;
 
 if($selType != "全部" && $selPlat != "全部") {		
-	$sqlcmd = getSqlCmd("searchType&Plat", $toPass, $tables);
+	$sqlcmd = getRetrievalSql("searchType&Plat", $toPass, $tables);
 	$gameCounts = counts($sqlcmd[0], $dbConn);	
 }
 else if($selType != "全部" && $selPlat == "全部"){
-	$sqlcmd = getSqlCmd("searchType", $toPass, $tables);
+	$sqlcmd = getRetrievalSql("searchType", $toPass, $tables);
 	$gameCounts = counts($sqlcmd[0], $dbConn);
 }
 else if($selType == "全部" && $selPlat != "全部") {
-	$sqlcmd = getSqlCmd("searchPlat", $toPass, $tables);
+	$sqlcmd = getRetrievalSql("searchPlat", $toPass, $tables);
 	$gameCounts = counts($sqlcmd[0], $dbConn);
 }
 else if(isset($searchTitle)) {
-	$sqlcmd = getSqlCmd("searchTitle", $toPass, $tables);
+	$sqlcmd = getRetrievalSql("searchTitle", $toPass, $tables);
 	$gameCounts = counts($sqlcmd[0], $dbConn);
 }
 else {
-	$sqlcmd = getSqlCmd("usual", "1", $tables);
+	$sqlcmd = getRetrievalSql("usual", "1", $tables);
 	$gameCounts = counts($sqlcmd[0], $dbConn);
 }
 
@@ -132,5 +85,10 @@ $sqlCmd = "SELECT * from $typeTable";
 $gType = queryDb($sqlCmd, $dbConn);
 $sqlCmd = "SELECT * from $platformTable ORDER BY name";
 $gPlat = queryDb($sqlCmd, $dbConn);
+$sqlCmd = "SELECT * from $platformTable2";
+$platType = queryDb($sqlCmd, $dbConn);
 
+if(isset($_GET['plat'])){
+	$platTypeChosed = $_GET['plat'];
+}
 ?>
